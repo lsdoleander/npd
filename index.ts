@@ -15,15 +15,16 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
 
     console.info(`Copying ${name} to table: ${table}`);
 
-    const fileStream:ReadStream = createReadStream('/data/' + name, {
-      highWaterMark: 512 * 1024, // 512KB chunks for better performance
-    });
-    const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')})`+
-     ` FROM STDIN WITH (FORMAT csv, HEADER ${header}, ON_ERROR ignore, LOG_VERBOSITY verbose)`));
-    const csvFilter = new CSVCommaSpaceEscaper();
-
     try {
       await createTableIfNotExists(client, config, table);
+
+      const fileStream:ReadStream = createReadStream('/data/' + name, {
+        highWaterMark: 512 * 1024, // 512KB chunks for better performance
+      });
+      const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')})`+
+       ` FROM STDIN WITH (FORMAT csv, HEADER ${header}, ON_ERROR ignore, LOG_VERBOSITY verbose)`));
+      const csvFilter = new CSVCommaSpaceEscaper();
+      
       await pipeline(fileStream, csvFilter, pgStream);
       await createIndex(client, table, suffix);
       console.info(`Created Index for table: ${table}`);
@@ -58,6 +59,9 @@ export const importData = async (config: AppConfig): Promise<void> => {
 
   try {
     await copyCsvToTable(client, config);
+  } catch (error) {
+    console.error('Application error:', error);
+    process.exit(1);
   } finally {
     const durationSeconds = ((Date.now() - startTime) / 1000).toFixed(2);
     console.info(`Import completed in ${durationSeconds} seconds`);
