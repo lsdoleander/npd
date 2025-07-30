@@ -13,8 +13,8 @@ services:
     restart: always
     user: postgres
     environment:
-      POSTGRES_USER: npd
-      POSTGRES_PASSWORD: npd
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: npd
 
     healthcheck:
