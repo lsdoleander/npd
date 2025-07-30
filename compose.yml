@@ -7,6 +7,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    restart_policy: 
+      condition: on-failure
       
   db:
     image: postgres

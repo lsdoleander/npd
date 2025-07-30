@@ -8,11 +8,12 @@ import { createReadStream, readdirSync, type ReadStream } from 'node:fs';
 import { CSVCommaSpaceEscaper } from './filter';
 
 const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<void> => {
-  console.info(`Copying CSV to table ${config.table.name}`);
 
   async function file(name:string, header:boolean) {
     let suffix:string = name.replace(/ssn(\d)\.(\d+)\.txt/, '_$1_$2');
     let table:string = config.table.name+suffix;
+
+    console.info(`Copying ${name} to table: ${table}`);
 
     const fileStream:ReadStream = createReadStream('/data/' + name, {
       highWaterMark: 512 * 1024, // 512KB chunks for better performance
@@ -24,7 +25,6 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
     try {
       await createTableIfNotExists(client, config, table);
       await pipeline(fileStream, csvFilter, pgStream);
-      console.info(`Copied ${name} to table: ${table}`);
       await createIndex(client, table, suffix);
       console.info(`Created Index for table: ${table}`);
     } catch (error) {

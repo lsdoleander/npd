@@ -7,6 +7,7 @@ export const createTableIfNotExists = async (client: PoolClient, config: AppConf
     .join(', ');
 
   await client.query(`CREATE TABLE IF NOT EXISTS ${table} (${columnDefinitions})`);
+  console.log("Create table: ", table);
 };
 
 export const createIndex = async (client: PoolClient, table: string, suffix: string): Promise<void> => {
