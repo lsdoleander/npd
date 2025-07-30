@@ -20,10 +20,10 @@ export type AppConfig = {
 export const config: AppConfig = {
 
   database: {
-    user: 'postgres',
+    user: 'npd',
     host: 'db',
     database: 'npd',
-    password: 'postgres',
+    password: 'npd',
     port: 5432,
   },
 
