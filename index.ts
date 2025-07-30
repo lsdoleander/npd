@@ -7,7 +7,7 @@ import { createTableIfNotExists, createIndex } from './services';
 import { createReadStream, readdirSync, type ReadStream } from 'node:fs';
 import { CSVCommaSpaceEscaper } from './filter';
 
-const copyCsvToTable = async (client: PoolClient, config: AppConfig, table:string): Promise<void> => {
+const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<void> => {
   console.info(`Copying CSV to table ${config.table.name}`);
 
   async function file(name:string, header:boolean) {
