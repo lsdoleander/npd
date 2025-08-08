@@ -38,7 +38,7 @@ import postgres from 'postgres';
 						results = [...results, ...hits];
 					}
 				} catch (ex) {
-					// 2 BAD
+					console.log(ex);
 				}
 			}
 		}
