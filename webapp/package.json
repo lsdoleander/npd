@@ -1,0 +1,16 @@
+{
+  "name": "webapp",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "express.js",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-static": "^1.2.6",
+    "postgres": "^3.4.7"
+  },
+  "scripts": {
+    "start": "node express.js"
+  }
+}

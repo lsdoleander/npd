@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>National Public Data</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<script type="text/javascript" src="bootstrap.min.js"></script>
+		<script type="text/javascript" src="index.js"></script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div id="welcome">
+				<h3>No Searches to Display</h3>
+				<p>Whenever you are ready to find some data, just click the search button below!</p>
+				<div>
+					<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#npdsearch" aria-controls="npdsearch">
+					  Search Now!
+					</button>
+				</div>
+			</div>
+
+			<div id="results"></div>
+		</div>
+
+		<div class="offcanvas offcanvas-start" tabindex="-1" id="npdsearch" aria-labelledby="npdsearchLabel">
+		  <div class="offcanvas-header">
+		    <h5 class="offcanvas-title" id="npdsearchLabel">NPD Search</h5>
+		    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		  </div>
+		  <div class="offcanvas-body">
+		    <div>
+		      Enter the name and any location fields you choose to search and get back full address, DOB and SSN
+		    </div>
+		    <form id="search">
+				<div class="input-group">
+				  <span class="input-group-text">First</span>
+				  <input type="text" aria-label="First" class="form-control" name="first" />
+				</div>
+				<div class="input-group">
+				  <span class="input-group-text">Last</span>
+				  <input type="text" aria-label="Last" class="form-control" name="last" />
+				</div>
+				<div class="input-group">
+				  <span class="input-group-text">City</span>
+				  <input type="text" aria-label="City" class="form-control" name="city" />
+				</div>
+				<div class="input-group">
+				  <span class="input-group-text">State</span>
+				  <input type="text" aria-label="State" class="form-control" name="state" />
+				</div>
+				<div class="input-group">
+				  <span class="input-group-text">Zip</span>
+				  <input type="text" aria-label="Zip" class="form-control" name="zip" />
+				</div>
+				<div class="text-align-end">
+					<button type="submit" class="btn btn-primary mb-3">Search</button>
+				</div>
+			</form>
+		  </div>
+		</div>
+
+		<template type="text/html" id="table-template">
+			<table class="table mb-4 shadow">
+				<thead>
+					<tr>
+						<th>First</th>
+						<th>Middle</th>
+						<th>Last</th>
+						<th>Address</th>
+						<th>City</th>
+						<th>State</th>
+						<th>Zip</th>
+						<th>Phone</th>
+						<th>DOB</th>
+						<th>SSN</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</template>
+	</body>
+</html>
