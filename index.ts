@@ -14,15 +14,14 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
     let suffix:string = name.replace(/ssn(\d)\.(\d+)\.txt/, '_$1_$2');
     let table:string = config.table.name+suffix;
 
-    const fileStream:ReadStream = createReadStream('/data/' + name, {
-      highWaterMark: 512 * 1024, // 512KB chunks for better performance
-    });
-    const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')})`+
-     ` FROM STDIN WITH (FORMAT csv, HEADER ${header}, ON_ERROR ignore, LOG_VERBOSITY verbose)`));
-    const csvFilter = new CSVCommaSpaceEscaper();
-
     try {
       await createTableIfNotExists(client, config, table);
+      const fileStream:ReadStream = createReadStream('/data/' + name, {
+        highWaterMark: 512 * 1024, // 512KB chunks for better performance
+      });
+      const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')})`+
+       ` FROM STDIN WITH (FORMAT csv, HEADER ${header}, ON_ERROR ignore, LOG_VERBOSITY verbose)`));
+      const csvFilter = new CSVCommaSpaceEscaper();
       await pipeline(fileStream, csvFilter, pgStream);
       console.info(`Copied ${name} to table: ${table}`);
       await createIndex(client, table, suffix);
