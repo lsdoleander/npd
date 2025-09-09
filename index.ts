@@ -37,6 +37,8 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
   data.sort();
   data.reverse();
 
+  console.log("Files to process:", data.length);
+
   while (!done) {
     let fn:string = data.pop();
     if (fn && fn !== "errors.txt") {
