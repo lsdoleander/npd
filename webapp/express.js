@@ -32,7 +32,7 @@ import postgres from 'postgres';
 					}
 
 					const table = `npd_${spa}_${spb < 10 ? "0"+spb : spb}`;
-					const hits = await sql`select (first, middle, last, address, city, state, zip, phone, dob, ssn from ${table} 
+					const hits = await sql`select (first, middle, last, address, city, state, zip, phone, dob, ssn, since from ${table} 
 						${param('first')} ${param('last')} ${param('city')} ${param('state')} ${param('zip')}`
 					if (hits && hits.length > 0) {
 						results = [...results, ...hits];

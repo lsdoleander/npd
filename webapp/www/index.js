@@ -3,7 +3,6 @@ $(document).ready(function(){
 
   $("#search").on("submit", event => {
     event.preventDefault();
-    return false;
     
     (async()=>{
       let results = await fetch("/search", { data: $(this).serialize() });
@@ -13,6 +12,7 @@ $(document).ready(function(){
         let tbody = $(table).find("tbody");
         for (let i of results) {
           tbody.attach($(`<tr>
+            <td>${i.since}</td>
             <td>${i.first}</td>
             <td>${i.middle}</td>
             <td>${i.last}</td>
@@ -27,6 +27,8 @@ $(document).ready(function(){
         }
         $("#results").attach(table);
       }
-    })
+    })()
+
+    return false;
   });
 });
