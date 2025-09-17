@@ -11,7 +11,7 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
   console.info(`Copying CSV to table ${config.table.name}`);
 
   async function file(name:string, header:boolean) {
-    let suffix:string = name.replace(/ssn(\d)\.(\d+)\.txt/, '_$1_$2');
+    let suffix:string = name.replace(/ssn(\d)\.(\d+)(?:\.\d+)?\.txt/, '_$1_$2');
     let table:string = config.table.name+suffix;
 
     try {
