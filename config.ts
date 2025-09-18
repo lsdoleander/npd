@@ -54,7 +54,7 @@ export const config: AppConfig = {
 
     csvColumns: ['id','first','last','middle','suffix','dob','address','city','county',
       'state','zip','phone', //'aka1','aka2','aka3','since',
-      'altdob1' //,'altdob2','altdob3',
+      'altdob1', // 'altdob2','altdob3',
       'ssn']
   }
 };
