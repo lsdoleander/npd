@@ -1,6 +1,6 @@
 
-import * as stream from node:stream;
-import { createWriteStream, type WriteStream } from node:fs;
+import * as stream from 'node:stream';
+import { createWriteStream, type WriteStream } from 'node:fs';
 
 export class CSVCommaSpaceEscaper extends stream.Transform {
   remain:string = "";
