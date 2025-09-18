@@ -22,7 +22,7 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
       const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')})`+
        ` FROM STDIN WITH (FORMAT csv, HEADER ${header}, ON_ERROR ignore, LOG_VERBOSITY verbose)`));
       let effit:string = name.replace(/ssn(\d)\.(\d+)((\.\d+)*)\.txt/, '_$1_$2$3');
-      const csvFilter = new CSVCommaSpaceEscaper(effit, header);
+      const csvFilter = new CSVCommaSpaceEscaper(effit);
       await pipeline(fileStream, csvFilter, pgStream);
       console.info(`Copied ${name} to table: ${table}`);
       await createIndex(client, table, suffix);
