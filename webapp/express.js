@@ -25,14 +25,14 @@ import postgres from 'postgres';
 						if (req.params[name] && req.params[name].trim() !== "") {
 							const value = req.params[name];
 							const like = value.indexOf("%") > -1;
-							let out = sql`${where?"AND":"WHERE"} ${name} ${like ? "LIKE":"="} ${value}`
+							let out = `${where?"AND":"WHERE"} ${name} ${like ? "LIKE":"="} ${value}`
 							where = true
 							return out
 						}
 					}
 
 					const table = `npd_${spa}_${spb < 10 ? "0"+spb : spb}`;
-					const hits = await sql`select (first, middle, last, address, city, state, zip, phone, dob, ssn, since from ${table} 
+					const hits = await sql`select first, middle, last, address, city, state, zip, phone, dob, ssn, since from ${table} 
 						${param('first')} ${param('last')} ${param('city')} ${param('state')} ${param('zip')}`
 					if (hits && hits.length > 0) {
 						results = [...results, ...hits];
