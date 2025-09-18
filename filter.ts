@@ -1,8 +1,6 @@
 
 import * as stream from node:stream;
 import { createWriteStream, type WriteStream } from node:fs;
-import { parse } from 'csv-parse/sync'
-import { stringify } from 'csv-stringify/sync'
 
 export class CSVCommaSpaceEscaper extends stream.Transform {
   remain:string = "";
