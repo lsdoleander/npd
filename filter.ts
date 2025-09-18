@@ -33,11 +33,11 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
 
     try {
       let scrubbydub:string = filtered.replace(/((?:[^,\n]*,){12})(?:[^,\n]*,)*([^,\n]*\n)/g, "$1$2")
-      if (dwrites < 5) {
-        debug.write(scrubbydub);
-        dwrites++
+      if (this.dwrites < 5) {
+        this.debug.write(scrubbydub);
+        this.dwrites++
       } else {
-        debug.close();
+        this.debug.close();
       }
       cb(null, scrubbydub);
     } catch (ex) {
