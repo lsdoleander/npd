@@ -11,8 +11,8 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
 
   constructor(suffix){
     super()
-    this.errors = createWriteStream(`/data/errors${suffix}.txt`, { flags: "a" });
-    this.debug = createWriteStream(`/data/debug${suffix}.txt`, { flags: "a" });
+    this.errors = createWriteStream(`/data/errors_${suffix}.txt`, { flags: "a" });
+    this.debug = createWriteStream(`/data/debug_${suffix}.txt`, { flags: "a" });
     this.dwrites = 0;
     this.on("close", ()=>{
       if (this.errors) {
