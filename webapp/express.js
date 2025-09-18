@@ -25,7 +25,7 @@ import postgres from 'postgres';
 						_where_ = true;
 						return value;
 					}
-
+					const { first, last, city, state, zip, ssn } = req.params;
 					const table = `npd_${spa}_${spb < 10 ? "0"+spb : spb}`;
 					const hits = await sql`select id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
 					 from ${ sql(table) }${

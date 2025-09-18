@@ -3,10 +3,10 @@ $(document).ready(function(){
 
   $("#search").on("submit", event => {
     event.preventDefault();
-    const data = $(this).serialize();
+    const data = $("#search").serialize();
 
     (async()=>{
-      let results = await fetch("/search", { method: "post", data });
+      let results = await fetch("/search", { method: "post", body: new URLSearchParams(data) });
       if (results.length > 0) {
         $("#welcome").hide();
         let table = $(template);
