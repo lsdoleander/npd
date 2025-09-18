@@ -3,9 +3,6 @@ services:
     container_name: "ui"
     build: ./webapp
 
-    depends_on:
-      db:
-        condition: service_healthy
     ports:
       - 8989:8989
 
@@ -14,9 +11,7 @@ services:
     build: .
     volumes:
       - /media/data/NPD:/data
-    depends_on:
-      db:
-        condition: service_healthy
+
       
   db:
     image: postgres
@@ -26,12 +21,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: npd
-
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 1s
-      timeout: 5s
-      retries: 10
       
   adminer:
     image: adminer
