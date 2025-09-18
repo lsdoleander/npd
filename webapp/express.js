@@ -19,21 +19,22 @@ import postgres from 'postgres';
 		for (let spa in LAYOUT) {
 			for (let spb = 1; spb <= LAYOUT[spa]; spb++) {
 				try {
-					let where = false;
-
-					function param(name) {
-						if (req.params[name] && req.params[name].trim() !== "") {
-							const value = req.params[name];
-							const like = value.indexOf("%") > -1;
-							let out = `${where?"AND":"WHERE"} ${name} ${like ? "LIKE":"="} ${value}`
-							where = true
-							return out
-						}
+					let _where_ = false;
+					let where = function(){
+						let value = _where_ ? "AND" : "WHERE";
+						_where_ = true;
+						return value;
 					}
 
 					const table = `npd_${spa}_${spb < 10 ? "0"+spb : spb}`;
-					const hits = await sql`select id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn from ${table} 
-						${param('first')} ${param('last')} ${param('city')} ${param('state')} ${param('zip')} ${param('ssn')}`
+					const hits = await sql`select id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
+					 from ${ sql(table) }${
+						first ? sql` ${where()} first = ${ first }` : sql``}${
+						last ? sql` ${where()} last = ${ last }` : sql``}${
+						city ? sql` ${where()} city = ${ city }` : sql``}${
+						state ? sql` ${where()} state = ${ state }` : sql``}${
+						zip ? sql` ${where()} zip = ${ zip }` : sql``}${
+						ssn ? sql` ${where()} ssn = ${ ssn }` : sql``}`
 					if (hits && hits.length > 0) {
 						results = [...results, ...hits];
 					}
