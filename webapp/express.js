@@ -17,7 +17,7 @@ import postgres from 'postgres';
 		let results = [];
 
 		for (let spa in LAYOUT) {
-			for (const spb = 1; spb <= LAYOUT[spa]; spb++) {
+			for (let spb = 1; spb <= LAYOUT[spa]; spb++) {
 				try {
 					let where = false;
 
