@@ -7,7 +7,7 @@ import postgres from 'postgres';
 
 	const sql = postgres('postgres://postgres:postgres@db:5432/npd')
 
-	const LAYOUT = { "1":68, "2":40 };
+	const LAYOUT = { "0": 1, "1":68, "2":40 };
 
 	let app = express();
 	app.use(cors());
