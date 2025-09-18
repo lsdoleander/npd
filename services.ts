@@ -10,5 +10,5 @@ export const createTableIfNotExists = async (client: PoolClient, config: AppConf
 };
 
 export const createIndex = async (client: PoolClient, table: string, suffix: string): Promise<void> => {
-  await client.query(`CREATE INDEX IF NOT EXISTS index_name_by_location_${suffix} ON ${table} (first, last, city, state, zip) INCLUDE (middle, dob, address, phone, ssn)`)
+  await client.query(`CREATE INDEX IF NOT EXISTS index_name_by_location_${suffix} ON ${table} (first, last, city, state, zip) INCLUDE (id, middle, suffix, dob, address, phone, altdob1, ssn)`)
 }

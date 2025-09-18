@@ -5,15 +5,11 @@ import { createWriteStream, type WriteStream } from 'node:fs';
 export class CSVCommaSpaceEscaper extends stream.Transform {
   remain:string = "";
   errors:WriteStream
-  debug:WriteStream
-  dwrites:number
   headfix:boolean
 
   constructor(suffix){
     super()
     this.errors = createWriteStream(`/data/errors_${suffix}.txt`, { flags: "a" });
-    this.debug = createWriteStream(`/data/debug_${suffix}.txt`, { flags: "a" });
-    this.dwrites = 0;
     this.on("close", ()=>{
       if (this.errors) {
         this.errors.close()
@@ -28,17 +24,11 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
 
     this.remain += String(chunk);
     let idx:number = this.remain.lastIndexOf("\n");
-    let filtered:string = this.remain.substr(0, idx+1);//.replace(/, /g, ";");
+    let filtered:string = this.remain.substr(0, idx+1); //.replace(/, /g, ";");
     this.remain = this.remain.substr(idx + 1);
 
     try {
-      let scrubbydub:string = filtered.replace(/((?:[^,\n]*,){12})(?:[^,\n]*,)*([^,\n]*\n)/g, "$1$2")
-      if (this.dwrites < 5) {
-        this.debug.write(scrubbydub);
-        this.dwrites++
-      } else {
-        this.debug.close();
-      }
+      let scrubbydub:string = filtered.replace(/((?:[^,\n]*,){12})(?:[^,\n]*,)*([^,\n]*,)(?:[^,\n]*,){2}([^,\n]*\n)/g, "$1$2$3")
       cb(null, scrubbydub);
     } catch (ex) {
       this.errors.write(filtered);
