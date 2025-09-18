@@ -42,17 +42,18 @@ export const config: AppConfig = {
       state: "TEXT",
       zip: "TEXT",
       phone: "TEXT",
-      aka1: "TEXT",
+/*      aka1: "TEXT",
       aka2: "TEXT",
       aka3: "TEXT",
       since: "TEXT",
       altdob1: "TEXT",
       altdob2: "TEXT",
-      altdob3: "TEXT",
+      altdob3: "TEXT",*/
       ssn: "TEXT"
     },
 
     csvColumns: ['id','first','last','middle','suffix','dob','address','city','county',
-      'state','zip','phone','aka1','aka2','aka3','since','altdob1','altdob2','altdob3','ssn']
+      'state','zip','phone', //'aka1','aka2','aka3','since','altdob1','altdob2','altdob3',
+      'ssn']
   }
 };

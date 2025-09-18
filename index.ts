@@ -11,17 +11,18 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
   console.info(`Copying CSV to table ${config.table.name}`);
 
   async function file(name:string, header:boolean) {
-    let suffix:string = name.replace(/ssn(\d)\.(\d+)(?:\.\d+)?\.txt/, '_$1_$2');
+    let suffix:string = name.replace(/ssn(\d)\.(\d+)((\.\d+)*)\.txt/, '_$1_$2');
     let table:string = config.table.name+suffix;
 
     try {
       await createTableIfNotExists(client, config, table);
       const fileStream:ReadStream = createReadStream('/data/' + name, {
-        highWaterMark: 512 * 1024, // 512KB chunks for better performance
+        highWaterMark: 64 * 1024, // 512KB chunks for better performance
       });
       const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')})`+
        ` FROM STDIN WITH (FORMAT csv, HEADER ${header}, ON_ERROR ignore, LOG_VERBOSITY verbose)`));
-      const csvFilter = new CSVCommaSpaceEscaper();
+      let effit:string = name.replace(/ssn(\d)\.(\d+)((\.\d+)*)\.txt/, '_$1_$2$3');
+      const csvFilter = new CSVCommaSpaceEscaper(effit, header);
       await pipeline(fileStream, csvFilter, pgStream);
       console.info(`Copied ${name} to table: ${table}`);
       await createIndex(client, table, suffix);
@@ -41,10 +42,11 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
 
   while (!done) {
     let fn:string = data.pop();
-    if (fn && fn !== "errors.txt") {
-      console.log("Processing file:", fn);
-      await file(fn, fn === "ssn1.01.txt");
-    
+    if (fn) {
+      if (fn !== "errors.txt") {
+        console.log("Processing file:", fn);
+        await file(fn, fn === "ssn1.01.txt");
+      }
     } else {
       done = true;
     }

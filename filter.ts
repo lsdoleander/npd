@@ -1,14 +1,18 @@
 
-import * as stream from 'node:stream';
-import { createWriteStream, type WriteStream } from 'node:fs';
+import * as stream from node:stream;
+import { createWriteStream, type WriteStream } from node:fs;
+import { parse } from 'csv-parse/sync'
+import { stringify } from 'csv-stringify/sync'
 
 export class CSVCommaSpaceEscaper extends stream.Transform {
   remain:string = "";
-  errors:WriteStream = createWriteStream("/data/errors.txt", { flags: "a" });
+  errors:WriteStream
+  headfix:boolean
 
-  constructor(){
+  constructor(suffix){
     super()
-
+    this.errors = createWriteStream(`/data/errors${suffix}.txt`, { flags: "a" });
+    
     this.on("close", ()=>{
       if (this.errors) {
         this.errors.close()
@@ -18,9 +22,23 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
   }
 
   _transform(chunk: any, encoding: string, cb: Function) {
+
+    // const header:string = "id,first,last,middle,suffix,dob,address,city,county,state,zip,phone,aka1,aka2,aka3,since,altdob1,altdob2,altdob3,ssn\n"
+
     this.remain += String(chunk);
     let idx:number = this.remain.lastIndexOf("\n");
     let filtered:string = this.remain.substr(0, idx+1).replace(/, /g, ";");
+    this.remain = this.remain.substr(idx + 1);
+
+    try {
+      let scrubbydub:string = filtered.replace(/([^,\n]*,){12}(?:[^,\n]*,)*([^,\n]*\n)/g, "$1$2")
+      cb(null, scrubbydub);
+    } catch (ex) {
+      this.errors.write(filtered);
+      cb(null,"");
+    }
+
+    /*
     let check = true;
     while(check) {
       let matches = filtered.match(/(?:[^,\r\n]*,){20,25}[^,\r\n]+\r?\n/);
@@ -33,9 +51,7 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
       } else {
         check = false;
       }
-    }
-    
-    this.remain = this.remain.substr(idx + 1);
-    cb(null, filtered);
+    }*/
+
   }
 }
