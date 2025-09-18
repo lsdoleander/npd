@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsc index.ts",
     "start": "node index.js",
-    "docker": "podman compose up --build",
+    "docker": "git pull && podman compose up --build",
     "deploy": "rm -rf yarn.lock node_modules && scp * bee:/home/bee/Development/npd"
   }
 }
