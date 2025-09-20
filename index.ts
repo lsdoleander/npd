@@ -3,7 +3,7 @@ import { pipeline } from 'node:stream/promises';
 import { Pool, type PoolClient } from 'pg';
 import { from } from 'pg-copy-streams';
 import { config, type AppConfig } from './config';
-import { createTableIfNotExists, createIndex } from './services';
+import { createTableIfNotExists, createIndex, refactorIndices } from './services';
 import { createReadStream, readdirSync, renameSync, type ReadStream } from 'node:fs';
 import { CSVCommaSpaceEscaper } from './filter';
 
@@ -32,6 +32,10 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
       throw error;
     }
   }
+
+  console.log("Starting Index Refactor");
+  await refactorIndices(client);
+  console.log("Index Refactor Done");
 
   let data:Array<string> = readdirSync("/data/");
   let done:boolean = false;
