@@ -3,6 +3,8 @@ $(document).ready(function(){
   const receipt = $("#head-template").detach().html();
   let snum = 0;
 
+  $("#toggly").hide();
+
   $("#search").on("submit", event => {
     event.preventDefault();
     const data = $("#search").serialize();
@@ -11,20 +13,22 @@ $(document).ready(function(){
     let results = [];
 
     (async()=>{
-      const socket = new WebSocket("/search");
       let $body = $(template);
       $("#results").attach($body);
       $("#welcome").detach();
       $body.find(".snum").text(snum);
+      $("#toggly").show();
       $("#toggly").prop("disabled", true);
+      $("#toggly").css( opacity: 0.5 );
 
       const controls = {
         progress: $body.find(".progress"),
         status: $body.find(".status"),
         bar: $body.find(".progress-bar"),
-        table = $body.find("tbody")
+        table: $body.find("tbody")
       }
 
+      const socket = new WebSocket("/search");
       socket.addEventListener("message", function(event){
         let message = JSON.parse(event.data);
         if (!message.final) {
@@ -59,6 +63,8 @@ $(document).ready(function(){
             <a href="data:text/csv;base64,${message.csv}" download="npd-${snum}.csv">CSV</a>`);
 
           $("#toggly").prop("disabled", false);
+          $("#toggly").css({ opacity: 1 });
+          socket.close();
         }
       })
     })()
