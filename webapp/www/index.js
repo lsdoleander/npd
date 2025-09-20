@@ -96,7 +96,7 @@ $(document).ready(function(){
           controls.status.html("N/A");
         }
         $("#toggly").prop("disabled", false);
-        $("#toggly").css({ opacity: 1 });\
+        $("#toggly").css({ opacity: 1 });
 
         controls.table.find("td.ssn").on("click", event=>{
           search({ 
