@@ -6,8 +6,10 @@
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
+    "csv-stringify": "^6.6.0",
     "express": "^5.1.0",
     "express-static": "^1.2.6",
+    "express-ws": "^5.0.2",
     "postgres": "^3.4.7"
   },
   "scripts": {

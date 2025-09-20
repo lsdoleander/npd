@@ -6,9 +6,27 @@
 		<script type="text/javascript" src="jquery.min.js"></script>
 		<script type="text/javascript" src="bootstrap.min.js"></script>
 		<script type="text/javascript" src="index.js"></script>
+		<style>
+			.progress-bar {
+				color: white;
+				font-size: 1rem;
+				font-weight: 700;
+			}
+			#toggly {
+				font-size: 1.5rem;
+				font-weight: 700;
+				position: fixed;
+				top: 5;
+				left: 5;
+				z-index: -100;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="container-fluid">
+			<div id="toggly">
+				<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#npdsearch" aria-controls="npdsearch">&lt;</button>
+			</div>
 			<div id="welcome">
 				<h3>No Searches to Display</h3>
 				<p>Whenever you are ready to find some data, just click the search button below!</p>
@@ -22,7 +40,7 @@
 			<div id="results"></div>
 		</div>
 
-		<div class="offcanvas offcanvas-start" tabindex="-1" id="npdsearch" aria-labelledby="npdsearchLabel">
+		<div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="npdsearch" aria-labelledby="npdsearchLabel">
 		  <div class="offcanvas-header">
 		    <h5 class="offcanvas-title" id="npdsearchLabel">NPD Search</h5>
 		    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -57,34 +75,45 @@
 				  <input type="text" aria-label="ssn" class="form-control" name="ssn" />
 				</div>
 				<div class="text-align-end">
-					<button type="submit" class="btn btn-primary mb-3">Search</button>
+					<button type="submit" class="btn btn-primary mb-3" data-bs-toggle="offcanvas" data-bs-target="#npdsearch" aria-controls="npdsearch">Search</button>
 				</div>
 			</form>
 		  </div>
 		</div>
 
 		<template type="text/html" id="table-template">
-			<table class="table mb-4 shadow">
-				<thead>
-					<tr>
-						<th>First</th>
-						<th>Middle</th>
-						<th>Last</th>
-						<th>Suffix</th>
-						<th>Address</th>
-						<th>City</th>
-						<th>State</th>
-						<th>Zip</th>
-						<th>Phone</th>
-						<th>DOB</th>
-						<th>ALTDOB</th>
-						<th>SSN</th>
-					</tr>
-				</thead>
-				<tbody>
-					
-				</tbody>
-			</table>
+			<div class="row">
+				<div class="col-sm-3"><h3>Search #<span class="snum"></span></h3></div>
+				<div class="col-sm-9 text-align-end status">
+					<div class="progress" role="progressbar" aria-label="search progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+					  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%">0 %</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<table class="table mb-4 shadow">
+					<thead>
+						<tr>
+							<th>First</th>
+							<th>Middle</th>
+							<th>Last</th>
+							<th>Suffix</th>
+							<th>Address</th>
+							<th>City</th>
+							<th>State</th>
+							<th>Zip</th>
+							<th>Phone</th>
+							<th>DOB</th>
+							<th>ALTDOB</th>
+							<th>SSN</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				</table>
+			</div>
 		</template>
+
 	</body>
 </html>
