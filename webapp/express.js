@@ -69,7 +69,7 @@ import { stringify } from 'csv-stringify/sync'
 			series(queue, function(){
 				ws.send(JSON.stringify({
 					csv: btoa(stringify(results, { header: true })),
-					final: true;
+					final: true
 				}))
 			})
 		})
