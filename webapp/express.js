@@ -31,7 +31,7 @@ import { stringify } from 'csv-stringify/sync'
 				for (let spb = 1; spb <= LAYOUT[spa]; spb++) {
 					(function search(table, { first, last, city, state, zip, ssn }){
 						queue.push(function(cb){
-							try {
+							(async()=>{try {
 								let _where_ = false;
 								let where = function(){
 									let value = _where_ ? "AND" : "WHERE";
@@ -61,7 +61,7 @@ import { stringify } from 'csv-stringify/sync'
 							} catch (ex) {
 								console.log(ex);
 								cb();
-							}
+							}})()
 						})
 					})(`npd_${spa}_${spb < 10 ? "0"+spb : spb}`, data);
 				}
