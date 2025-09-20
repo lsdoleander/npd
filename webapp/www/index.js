@@ -121,7 +121,7 @@ $(document).ready(function(){
     event.preventDefault();
     if (!inprogress) {
       const data = cereal();
-      $("#search").reset();
+      $("#search")[0].reset();
       search(data);
     }
     return false;
