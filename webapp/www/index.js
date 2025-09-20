@@ -14,7 +14,7 @@ $(document).ready(function(){
 
     (async()=>{
       let $body = $(template);
-      $("#results").attach($body);
+      $("#results").append($body);
       $("#welcome").detach();
       $body.find(".snum").text(snum);
       $("#toggly").show();
@@ -36,7 +36,7 @@ $(document).ready(function(){
             results = [ ...results, ...message.hits ];
 
             for (let i of message.hits) {
-              controls.table.attach($(`<tr>
+              controls.table.append($(`<tr>
                 <td>${i.first}</td>
                 <td>${i.middle}</td>
                 <td>${i.last}</td>
