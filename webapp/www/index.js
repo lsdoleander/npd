@@ -67,8 +67,10 @@ $(document).ready(function(){
         }
       })
 
-      const data = $("#search").serialize();
-      socket.send(JSON.stringify(data));
+      socket.addEventListener("open", function(event){
+        const data = $("#search").serialize();
+        socket.send(JSON.stringify(data));
+      })
     })()
 
     return false;
