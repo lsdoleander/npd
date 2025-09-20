@@ -4,7 +4,7 @@ import { Pool, type PoolClient } from 'pg';
 import { from } from 'pg-copy-streams';
 import { config, type AppConfig } from './config';
 import { createTableIfNotExists, createIndex } from './services';
-import { createReadStream, readdirSync, type ReadStream } from 'node:fs';
+import { createReadStream, readdirSync, renameSync type ReadStream } from 'node:fs';
 import { CSVCommaSpaceEscaper } from './filter';
 
 const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<void> => {
@@ -26,6 +26,7 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
       console.info(`Copied ${name} to table: ${table}`);
       await createIndex(client, table, suffix);
       console.info(`Created Index for table: ${table}`);
+      renameSync('/data/' + name, '/done/' + name);
     } catch (error) {
       console.error('Error during copy:', error);
       throw error;

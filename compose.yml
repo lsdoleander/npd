@@ -11,7 +11,7 @@ services:
     build: .
     volumes:
       - /media/data/NPD:/data
-
+      - /media/data/finished:/done
       
   db:
     image: postgres
