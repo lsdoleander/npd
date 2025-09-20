@@ -50,14 +50,18 @@ import { stringify } from 'csv-stringify/sync'
 								
 								if (hits && hits.length > 0) {
 									status.hits += hits.length;
-									ws.send(JSON.stringify({
-										status,
-										hits,
-										final: false
-									}))
 									results = [...results, ...hits];
-									setTimeout(cb,0)
 								}
+
+								status.done++
+								
+								ws.send(JSON.stringify({
+									status,
+									hits,
+									final: false
+								}))
+								setTimeout(cb,0)
+
 							} catch (ex) {
 								console.log(ex);
 								cb();
