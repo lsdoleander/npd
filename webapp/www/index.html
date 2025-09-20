@@ -18,12 +18,18 @@
 				position: fixed;
 				top: 5;
 				left: 5;
-				z-index: -100;
+				z-index: 0;
+			}
+			#toggly button:disabled {
+				color: #CCC;
+			}
+			.offcanvas{
+				z-index: 1;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="container-fluid">
+		<div class="container-fluid mt-3">
 			<div id="toggly">
 				<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#npdsearch" aria-controls="npdsearch">&lt;</button>
 			</div>
