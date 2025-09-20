@@ -3,6 +3,22 @@ $(document).ready(function(){
   const receipt = $("#head-template").detach().html();
   let snum = 0;
 
+  function cereal(){
+    var formDataArray = $('#search').serializeArray();
+    var formObject = {};
+    $.each(formDataArray, function() {
+        if (formObject[this.name]) {
+            if (!Array.isArray(formObject[this.name])) {
+                formObject[this.name] = [formObject[this.name]];
+            }
+            formObject[this.name].push(this.value || '');
+        } else {
+            formObject[this.name] = this.value || '';
+        }
+    });
+    return formObject;
+  }
+
   $("#toggly").hide();
 
   $("#search").on("submit", event => {
@@ -68,7 +84,7 @@ $(document).ready(function(){
       })
 
       socket.addEventListener("open", function(event){
-        const data = $("#search").serialize();
+        const data = cereal();
         socket.send(JSON.stringify(data));
       })
     })()
