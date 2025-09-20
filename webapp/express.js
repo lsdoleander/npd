@@ -41,16 +41,15 @@ import { stringify } from 'csv-stringify/sync'
 										return value;
 									}
 
-									const hits = await sql`select id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
-									 	from ${ sql(table) }${
-										first ? sql` ${where()} first = ${ first }` : sql``}${
-										last ? sql` ${where()} last = ${ last }` : sql``}${
-										city ? sql` ${where()} city = ${ city }` : sql``}${
-										state ? sql` ${where()} state = ${ state }` : sql``}${
-										zip ? sql` ${where()} zip = ${ zip }` : sql``}${
-										ssn ? sql` ${where()} ssn = ${ ssn }` : sql``}`
+									const hits = await sql`SELECT id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
+									 	FROM ${ sql(table) } WHERE 1=1
+										first ? sql` AND first = ${ first }` : sql``}${
+										last ? sql` AND last = ${ last }` : sql``}${
+										city ? sql` AND city = ${ city }` : sql``}${
+										state ? sql` AND state = ${ state }` : sql``}${
+										zip ? sql` AND zip = ${ zip }` : sql``}${
+										ssn ? sql` AND ssn = ${ ssn }` : sql``}`
 									
-									console.log(table, hits?.length);
 
 									if (hits && hits.length > 0) {
 										status.hits += hits.length;

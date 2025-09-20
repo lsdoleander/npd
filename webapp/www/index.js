@@ -74,9 +74,12 @@ $(document).ready(function(){
             controls.bar.text(`${percent} %`);
           }
         } else {
-          controls.status.html(`<a href="data:application/json;base64,${btoa(JSON.stringify(results, null, 2))}" download="npd-${snum}.json">JSON</a> | 
-            <a href="data:text/csv;base64,${message.csv}" download="npd-${snum}.csv">CSV</a>`);
-
+          if (results.length > 0 && message.csv) {
+            controls.status.html(`<a href="data:application/json;base64,${btoa(JSON.stringify(results, null, 2))}" download="npd-${snum}.json">JSON</a> | 
+              <a href="data:text/csv;base64,${message.csv}" download="npd-${snum}.csv">CSV</a>`);
+          } else {
+            controls.status.html("N/A");
+          }
           $("#toggly").prop("disabled", false);
           $("#toggly").css({ opacity: 1 });
           socket.close();
