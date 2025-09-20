@@ -52,3 +52,7 @@ table.searchresults td {
 	font-weight: 300;
 	font-style: normal;
 }
+
+td.ssn:hover {
+	background-color: lightcyan;
+}
