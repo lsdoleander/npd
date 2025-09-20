@@ -22,7 +22,7 @@ $(document).ready(function(){
   }
 
 
-  async function search(){
+  async function search(data){
     inprogress = true;
     snum++;
 
