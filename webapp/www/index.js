@@ -19,7 +19,7 @@ $(document).ready(function(){
       $body.find(".snum").text(snum);
       $("#toggly").show();
       $("#toggly").prop("disabled", true);
-      $("#toggly").css( opacity: 0.5 );
+      $("#toggly").css({ opacity: 0.5 });
 
       const controls = {
         progress: $body.find(".progress"),
