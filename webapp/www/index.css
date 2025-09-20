@@ -1,0 +1,54 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Sans+Condensed:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Workbench&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+body {
+	background-color: #FFFFD0;
+
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 300;
+	font-style: normal;
+}
+
+.progress-bar {
+	color: white;
+	font-size: 1rem;
+	font-weight: 700;
+}
+
+#toggly {
+	font-size: 1.5rem;
+	font-weight: 700;
+	position: fixed;
+	top: 5;
+	left: 5;
+	z-index: 0;
+}
+
+#toggly button:disabled {
+	color: #CCC;
+}
+
+table {
+	background-color: white;
+}
+
+table.searchresults th {
+	background-color: black;
+	color: cyan;
+
+	font-family: "Workbench", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	font-variation-settings: "BLED" 0, "SCAN" 0;
+}
+
+table.searchresults td {
+	font-family: "Reddit Sans Condensed", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 300;
+	font-style: normal;
+}

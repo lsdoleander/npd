@@ -10,8 +10,10 @@ export const createTableIfNotExists = async (client: PoolClient, config: AppConf
 };
 
 export const createIndex = async (client: PoolClient, table: string, suffix: string): Promise<void> => {
-  await client.query(`CREATE INDEX IF NOT EXISTS npd${suffix}_search_index ON ${table} (first, last, city, state, zip, ssn) INCLUDE (id, middle, suffix, dob, address, phone, altdob1)`)
+  await client.query(`CREATE INDEX IF NOT EXISTS npd${suffix}_search_index ON ${table} (first, last, city, state, zip) INCLUDE (id, middle, suffix, address, phone, dob, altdob1, ssn)`)
   console.log(`created npd${suffix}_search_index`)
+  await client.query(`CREATE INDEX IF NOT EXISTS npd${suffix}_reverse_ssn ON ${table} (ssn) INCLUDE (id, first, last, middle, suffix, address, city, state, zip, phone, dob, altdob1)`)
+  console.log(`created npd${suffix}_reverse_ssn`)
 }
 
 export const refactorIndices = async(client: PoolClient): Promise<void> => {

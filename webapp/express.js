@@ -37,18 +37,12 @@ import { stringify } from 'csv-stringify/sync'
 
 									const hits = await sql`SELECT id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
 									 	FROM ${ sql(table) } WHERE 1=1
-										${ first ? sql` AND first = ${ first }` 
-											: sql``}
-										${ last ? sql` AND last = ${ last }`
-										 : sql``}
-										${ city ? sql` AND city = ${ city }`
-										 : sql``}
-										${ state ? sql` AND state = ${ state }`
-										 : sql``}
-										${ zip ? sql` AND zip = ${ zip }`
-										 : sql``}
-										${ ssn ? sql` AND ssn = ${ ssn }`
-										 : sql``}`
+										${ first ? sql` AND first = ${ first }` : sql``}
+										${ last ? sql` AND last = ${ last }` : sql``}
+										${ city ? sql` AND city = ${ city }` : sql``}
+										${ state ? sql` AND state = ${ state }` : sql``}
+										${ zip ? sql` AND zip = ${ zip }` : sql``}
+										${ ssn ? sql` AND ssn = ${ ssn }` : sql``}`
 									
 
 									if (hits && hits.length > 0) {
