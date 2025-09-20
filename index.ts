@@ -4,7 +4,7 @@ import { Pool, type PoolClient } from 'pg';
 import { from } from 'pg-copy-streams';
 import { config, type AppConfig } from './config';
 import { createTableIfNotExists, createIndex } from './services';
-import { createReadStream, readdirSync, renameSync type ReadStream } from 'node:fs';
+import { createReadStream, readdirSync, renameSync, type ReadStream } from 'node:fs';
 import { CSVCommaSpaceEscaper } from './filter';
 
 const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<void> => {
