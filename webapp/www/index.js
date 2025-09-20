@@ -23,6 +23,7 @@ $(document).ready(function(){
 
 
   async function search(data){
+    console.log(data);
     inprogress = true;
     snum++;
 
@@ -30,10 +31,10 @@ $(document).ready(function(){
     let $body = $(template);
     $("#results").append($body);
     $("#welcome").detach();
-    $body.find(".snum").text(snum);
     $("#toggly").show();
     $("#toggly").prop("disabled", true);
     $("#toggly").css({ opacity: 0.5 });
+    $body.find(".snum").text(snum);
 
     const controls = {
       progress: $body.find(".progress"),
@@ -121,8 +122,9 @@ $(document).ready(function(){
     event.preventDefault();
     if (!inprogress) {
       const data = cereal();
-      $("#search")[0].reset();
+      console.log("data", data);
       search(data);
+      $("#search")[0].reset();
     }
     return false;
   });

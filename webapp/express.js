@@ -27,6 +27,7 @@ import { stringify } from 'csv-stringify/sync'
 
 		ws.on("message", message=>{
 			let data = JSON.parse(message);
+			console.log("message", message);
 
 			for (let spa in LAYOUT) {
 				for (let spb = 1; spb <= LAYOUT[spa]; spb++) {
