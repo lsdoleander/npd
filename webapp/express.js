@@ -7,7 +7,7 @@ import postgres from 'postgres';
 
 	const sql = postgres('postgres://postgres:postgres@db:5432/npd')
 
-	const LAYOUT = { "0": 1, "1":68, "2":18 }; //40
+	const LAYOUT = { "0": 1, "1":68, "2":27 }; //40
 
 	let app = express();
 	app.use(cors());
@@ -35,6 +35,7 @@ import postgres from 'postgres';
 						state ? sql` ${where()} state = ${ state }` : sql``}${
 						zip ? sql` ${where()} zip = ${ zip }` : sql``}${
 						ssn ? sql` ${where()} ssn = ${ ssn }` : sql``}`
+					console.log ("searched ", table, hits.length, "results.");
 					if (hits && hits.length > 0) {
 						results = [...results, ...hits];
 					}
