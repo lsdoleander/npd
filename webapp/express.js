@@ -50,6 +50,8 @@ import { stringify } from 'csv-stringify/sync'
 										zip ? sql` ${where()} zip = ${ zip }` : sql``}${
 										ssn ? sql` ${where()} ssn = ${ ssn }` : sql``}`
 									
+									console.log(table, hits?.length);
+
 									if (hits && hits.length > 0) {
 										status.hits += hits.length;
 										results = [...results, ...hits];
