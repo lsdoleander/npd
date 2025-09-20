@@ -7,7 +7,6 @@ $(document).ready(function(){
 
   $("#search").on("submit", event => {
     event.preventDefault();
-    const data = $("#search").serialize();
     snum++;
 
     let results = [];
@@ -67,6 +66,9 @@ $(document).ready(function(){
           socket.close();
         }
       })
+
+      const data = $("#search").serialize();
+      socket.send(JSON.stringify(data));
     })()
 
     return false;
