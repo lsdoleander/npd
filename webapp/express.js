@@ -34,21 +34,21 @@ import { stringify } from 'csv-stringify/sync'
 						queue.push(function(cb){
 							(async()=>{
 								try {
-									let _where_ = false;
-									let where = function(){
-										let value = _where_ ? "AND" : "WHERE";
-										_where_ = true;
-										return value;
-									}
 
 									const hits = await sql`SELECT id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
 									 	FROM ${ sql(table) } WHERE 1=1
-										first ? sql` AND first = ${ first }` : sql``}${
-										last ? sql` AND last = ${ last }` : sql``}${
-										city ? sql` AND city = ${ city }` : sql``}${
-										state ? sql` AND state = ${ state }` : sql``}${
-										zip ? sql` AND zip = ${ zip }` : sql``}${
-										ssn ? sql` AND ssn = ${ ssn }` : sql``}`
+										${ first ? sql` AND first = ${ first }` 
+											: sql``}
+										${ last ? sql` AND last = ${ last }`
+										 : sql``}
+										${ city ? sql` AND city = ${ city }`
+										 : sql``}
+										${ state ? sql` AND state = ${ state }`
+										 : sql``}
+										${ zip ? sql` AND zip = ${ zip }`
+										 : sql``}
+										${ ssn ? sql` AND ssn = ${ ssn }`
+										 : sql``}`
 									
 
 									if (hits && hits.length > 0) {
