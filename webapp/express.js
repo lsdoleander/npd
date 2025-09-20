@@ -25,54 +25,58 @@ import { stringify } from 'csv-stringify/sync'
 		let results = [];
 		let queue = [];
 
-		ws.on("message", m=>{
-			let data = JSON.parse(m);
+		ws.on("message", message=>{
+			let data = JSON.parse(message);
+
 			for (let spa in LAYOUT) {
 				for (let spb = 1; spb <= LAYOUT[spa]; spb++) {
-					(function search(table, { first, last, city, state, zip, ssn }){
+					function search(table, { first, last, city, state, zip, ssn }){
 						queue.push(function(cb){
-							(async()=>{try {
-								let _where_ = false;
-								let where = function(){
-									let value = _where_ ? "AND" : "WHERE";
-									_where_ = true;
-									return value;
-								}
+							(async()=>{
+								try {
+									let _where_ = false;
+									let where = function(){
+										let value = _where_ ? "AND" : "WHERE";
+										_where_ = true;
+										return value;
+									}
 
-								const hits = await sql`select id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
-								 	from ${ sql(table) }${
-									first ? sql` ${where()} first = ${ first }` : sql``}${
-									last ? sql` ${where()} last = ${ last }` : sql``}${
-									city ? sql` ${where()} city = ${ city }` : sql``}${
-									state ? sql` ${where()} state = ${ state }` : sql``}${
-									zip ? sql` ${where()} zip = ${ zip }` : sql``}${
-									ssn ? sql` ${where()} ssn = ${ ssn }` : sql``}`
-								
-								if (hits && hits.length > 0) {
-									status.hits += hits.length;
-									results = [...results, ...hits];
-								}
+									const hits = await sql`select id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
+									 	from ${ sql(table) }${
+										first ? sql` ${where()} first = ${ first }` : sql``}${
+										last ? sql` ${where()} last = ${ last }` : sql``}${
+										city ? sql` ${where()} city = ${ city }` : sql``}${
+										state ? sql` ${where()} state = ${ state }` : sql``}${
+										zip ? sql` ${where()} zip = ${ zip }` : sql``}${
+										ssn ? sql` ${where()} ssn = ${ ssn }` : sql``}`
+									
+									if (hits && hits.length > 0) {
+										status.hits += hits.length;
+										results = [...results, ...hits];
+									}
 
-								status.done++
-								
-								ws.send(JSON.stringify({
-									status,
-									hits,
-									final: false
-								}))
-								setTimeout(cb,0)
+									status.done++
 
-							} catch (ex) {
-								console.log(ex);
-								cb();
-							}})()
+									ws.send(JSON.stringify({
+										status,
+										hits,
+										final: false
+									}))
+									setTimeout(cb,0)
+
+								} catch (ex) {
+									console.log(ex);
+									cb();
+								}}
+							)()
 						})
-					})(`npd_${spa}_${spb < 10 ? "0"+spb : spb}`, data);
+					}
+					search (`npd_${spa}_${spb < 10 ? "0"+spb : spb}`, data);
 				}
 			}
 			series(queue, function(){
 				ws.send(JSON.stringify({
-					csv: btoa(stringify(results, { header: true })),
+					csv: results.length > 0 ? btoa(stringify(results, { header: true })) : null,
 					final: true
 				}))
 			})
