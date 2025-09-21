@@ -23,7 +23,6 @@ $(document).ready(function(){
 
 
   async function search(data){
-    console.log(data);
     inprogress = true;
     snum++;
 
@@ -100,9 +99,11 @@ $(document).ready(function(){
         $("#toggly").css({ opacity: 1 });
 
         controls.table.find("td.ssn").on("click", event=>{
-          search({ 
-            ssn: $(event.target).attr("data")
-          })
+          if (!inprogress) {
+            search({ 
+              ssn: $(event.target).attr("data")
+            })
+          }
         })
 
         socket.close();
@@ -111,7 +112,8 @@ $(document).ready(function(){
     })
 
     socket.addEventListener("open", function(event){
-      if (!inprogress) socket.send(JSON.stringify(data));
+      console.log("socket open", data);
+      socket.send(JSON.stringify(data));
     })
   }
 
