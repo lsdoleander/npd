@@ -33,9 +33,6 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
     }
   }
 
-  console.log("Starting Index Refactor");
-  await refactorIndices(client);
-  console.log("Index Refactor Done");
 
   let data:Array<string> = readdirSync("/data/");
   let done:boolean = false;
