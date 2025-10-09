@@ -28,7 +28,7 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
     this.remain = this.remain.substr(idx + 1);
 
     try {
-      let scrubbydub:string = filtered.replace(/((?:[^,\n]*,){12})(?:[^,\n]*,)*([^,\n]*,)(?:[^,\n]*,){2}([^,\n]*\n)/g, "$1$2$3")
+      let scrubbydub:string = filtered.replace(/(\d+,\w+,\w+,\w*,\w*,(?:\d{8})?,[^,]*,\w+,\w*,\w+,\d*,\d*,)(?:[^\n]*)((?:\d{8})?,)(?:[^,\n]*,){2}((?:\d{9})\n)/g, "$1$2$3")
                                       .replace(/^\n+/,'').replace(/\n+$/,'').replace(/\n+\n/g,'\n')
       cb(null, scrubbydub);
     } catch (ex) {
