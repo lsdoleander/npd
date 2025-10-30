@@ -16,7 +16,7 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
 
     try {
       await createTableIfNotExists(client, config, table);
-      const fileStream:ReadStream = createReadStream('/data/' + name, {
+      const fileStream:ReadStream = createReadStream('/data/NPD/' + name, {
         highWaterMark: 64 * 1024, // 512KB chunks for better performance
       });
       const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')})`+
@@ -26,7 +26,7 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
       console.info(`Copied ${name} to table: ${table}`);
       await createIndex(client, table, suffix);
       console.info(`Created Index for table: ${table}`);
-      renameSync('/data/' + name, '/done/' + name);
+      renameSync('/data/NPD/' + name, '/data/finished/' + name);
     } catch (error) {
       console.error('Error during copy:', error);
       throw error;
@@ -34,7 +34,7 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
   }
 
 
-  let data:Array<string> = readdirSync("/data/");
+  let data:Array<string> = readdirSync("/data/NPD");
   let done:boolean = false;
   data.sort();
   data.reverse();

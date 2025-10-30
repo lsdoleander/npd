@@ -10,8 +10,7 @@ services:
     container_name: "csvimporter"
     build: .
     volumes:
-      - /media/data/NPD:/data
-      - /media/data/finished:/done
+      - /media/data:/data
       
   db:
     image: postgres

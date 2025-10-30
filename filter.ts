@@ -2,6 +2,8 @@
 import * as stream from 'node:stream';
 import { createWriteStream, type WriteStream } from 'node:fs';
 
+const PATTERN = /(\d+,[^,]+,[^,]+,[^,]*,[^,]*,(?:\d{8})?,(?:"[^"]+"|[^,]*),[^,]*,[^,]*,(?:[A-Z]{2})?,(?:\d{5}(?:-\d{4})?)?,(?:\d{10})?,)(?:[^\n]*)(?:\d{8})?,[^,\n]*,[^,\n]*(,(?:\d{9})?)/;
+
 export class CSVCommaSpaceEscaper extends stream.Transform {
   remain:string = "";
   errors:WriteStream
@@ -28,11 +30,22 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
     this.remain = this.remain.substr(idx + 1);
 
     try {
-      let scrubbydub:string = filtered.replace(/(\d+,\w+,\w+,\w*,\w*,(?:\d{8})?,[^,]*,\w+,\w*,\w+,\d*,\d*,)(?:[^\n]*)((?:\d{8})?,)(?:[^,\n]*,){2}((?:\d{9})\n)/g, "$1$2$3")
-                                      .replace(/^\n+/,'').replace(/\n+$/,'').replace(/\n+\n/g,'\n')
+      //let scrubbydub:string = filtered.replace(/(\d+,[^,]+,[^,]+,[^,]*,[^,]*,(?:\d{8})?,)([^,]+,[^,]*)(,[^,]*,[^,]*,(?:[A-Z]{2})?,(?:\d{5}(?:-\d{4})?),(?:\d{10})?)/g, '$1"$2"$3')
+      let scrubbydub:string = filtered.replace(/\n\n+/g, "\n");
+      let joins = [];
+      for (let str of scrubbydub.split("\n")){
+        if (PATTERN.test(str)) {
+          joins.push(str.replace(/\d{4}$/,"").replace(PATTERN, "$1$2$3"));
+        } else {
+          if (!this.errors) this.errors = createWriteStream(`/data/errors_${this.suffix}.txt`, { flags: "a" });
+          this.errors.write(str+"\n");
+        }
+      }
+      scrubbydub = joins.join("\n")+"\n";
       cb(null, scrubbydub);
     } catch (ex) {
-      if (!this.errors)     this.errors = createWriteStream(`/data/errors_${this.suffix}.txt`, { flags: "a" });
+      console.warn (ex);
+      if (!this.errors) this.errors = createWriteStream(`/data/errors_${this.suffix}.txt`, { flags: "a" });
       this.errors.write(filtered);
       cb(null,"");
     }

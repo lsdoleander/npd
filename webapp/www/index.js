@@ -102,7 +102,7 @@ $(document).ready(function(){
           if (!inprogress) {
             search({ 
               ssn: $(event.target).attr("data")
-            })
+            });
           }
         })
 

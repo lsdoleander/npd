@@ -56,11 +56,7 @@
 				</div>
 				<div class="input-group">
 				  <span class="input-group-text" style="width: 5rem">Zip</span>
-				  <input type="text" aria-label="Zip" class="form-control" name="zip" />
-				</div>
-				<div class="input-group">
-				  <span class="input-group-text" style="width: 5rem">SSN</span>
-				  <input type="text" aria-label="ssn" class="form-control" name="ssn" />
+				  <input type="text" aria-label="Zip" class="form-control" name="zip" maxlength="2" />
 				</div>
 				<div class="text-align-end">
 					<button type="submit" class="btn btn-primary mb-3" data-bs-toggle="offcanvas" data-bs-target="#npdsearch" aria-controls="npdsearch">Search</button>
@@ -79,27 +75,29 @@
 				</div>
 			</div>
 			<div class="row">
-				<table class="col-sm-10 offset-sm-1 table mb-4 shadow searchresults">
-					<thead>
-						<tr>
-							<th>First</th>
-							<th>Middle</th>
-							<th>Last</th>
-							<th>Suffix</th>
-							<th>Address</th>
-							<th>City</th>
-							<th>State</th>
-							<th>Zip</th>
-							<th>Phone</th>
-							<th>DOB</th>
-							<th>ALTDOB</th>
-							<th>SSN</th>
-						</tr>
-					</thead>
-					<tbody>
-						
-					</tbody>
-				</table>
+				<div class="offset-sm-1 col-sm-10">
+					<table class="table mb-4 shadow searchresults">
+						<thead>
+							<tr>
+								<th>First</th>
+								<th>Middle</th>
+								<th>Last</th>
+								<th>Suffix</th>
+								<th>Address</th>
+								<th>City</th>
+								<th>State</th>
+								<th>Zip</th>
+								<th>Phone</th>
+								<th>DOB</th>
+								<th>ALTDOB</th>
+								<th>SSN</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</template>
 
