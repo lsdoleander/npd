@@ -17,44 +17,49 @@ export type AppConfig = {
   table: TableConfig;
 };
 
-export const config: AppConfig = {
+export const config: AppConfig = (function(){
 
-  database: {
-    user: 'postgres',
-    host: 'db',
-    database: 'npd',
-    password: 'postgres',
-    port: 5432,
-  },
-
-  table: {
-    name: 'NPD',
-    columns: {
-      id: "INTEGER",
-      first: "TEXT",
-      last: "TEXT",
-      middle: "TEXT",
-      suffix: "TEXT",
-      dob: "TEXT",
-      address: "TEXT",
-      city: "TEXT",
-      county: "TEXT",
-      state: "TEXT",
-      zip: "TEXT",
-      phone: "TEXT",
-/*      aka1: "TEXT",
-      aka2: "TEXT",
-      aka3: "TEXT",
-      since: "TEXT",*/
-      altdob1: "TEXT",
-/*      altdob2: "TEXT",
-      altdob3: "TEXT",*/
-      ssn: "TEXT"
+  let c = {
+    database: {
+      user: 'postgres',
+      host: 'db',
+      database: 'npd',
+      password: 'postgres',
+      port: 5432,
     },
 
-    csvColumns: ['id','first','last','middle','suffix','dob','address','city','county',
-      'state','zip','phone', //'aka1','aka2','aka3','since',
-      'altdob1', // 'altdob2','altdob3',
-      'ssn']
+    table: {
+      name: 'NPD',
+      columns: {
+        id: "INTEGER", // 0
+        first: "TEXT",
+        last: "TEXT",
+        middle: "TEXT",
+        suffix: "TEXT",
+        dob: "TEXT",
+        address: "TEXT", // 6
+        city: "TEXT",
+        county: "TEXT",
+        state: "TEXT",  // 9
+        zip: "TEXT",    // 10
+        phone: "TEXT",  // 11
+/*      aka1: "TEXT",
+        aka2: "TEXT",
+        aka3: "TEXT",
+        since: "TEXT",*/
+        altdob1: "TEXT", // 16
+/*      altdob2: "TEXT",
+        altdob3: "TEXT",*/
+        ssn: "TEXT" // 19
+      },
+
+      csvColumns: []
+    }
   }
-};
+
+  for (let key in c.table.columns) {
+    c.table.csvColumns.push(key);
+  }
+
+  return c;
+})();
