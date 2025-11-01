@@ -36,39 +36,48 @@ const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<vo
       }
     }
 
-    await createTableIfNotExists(client, config, table);
-    await createIndex(client, table, suffix);
-    const VALUES:string = (()=>{
-      let value:string = "$1";
-      for (let i:number = 2; i <= 14; i++) {
-        value += ", $" + i;
+    try {
+      client.query("BEGIN");
+      await createTableIfNotExists(client, config, table);
+      await createIndex(client, table, suffix);
+      const VALUES:string = (()=>{
+        let value:string = "$1";
+        for (let i:number = 2; i <= 14; i++) {
+          value += ", $" + i;
+        }
+        return value;
+      })();
+
+      const query:string = `INSERT INTO ${table} (${config.table.csvColumns.join(',')}) VALUES (${VALUES})`;
+
+      const fileStream:ReadStream = createReadStream('/data/NPD/' + name, {
+        highWaterMark: 64 * 1024, // 64KB chunks
+      });
+
+      const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+      });
+
+      for await (const line of rl) {
+        let insert:Array<string> = columns(line);
+        if (insert) {
+          client.query(query, insert);
+        }
       }
-      return value;
-    })();
 
-    const query:string = `INSERT INTO ${table} (${config.table.csvColumns.join(',')}) VALUES (${VALUES})`;
+      if (errors) errors.close();
+      renameSync('/data/NPD/' + name, '/data/finished/' + name);
+      client.query("COMMIT");
 
-    const fileStream:ReadStream = createReadStream('/data/NPD/' + name, {
-      highWaterMark: 64 * 1024, // 64KB chunks
-    });
+      const durationSeconds:string = ((Date.now() - startTime) / 1000).toFixed(2);
+      console.info(`Imported ${name} in ${durationSeconds} seconds`);
 
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity
-    });
-
-    for await (const line of rl) {
-      let insert:Array<string> = columns(line);
-      if (insert) {
-        client.query(query, insert);
-      }
+    } catch(ex) {
+      console.error(ex);
+      client.query("ROLLBACK");
+      console.info(`Rollback ${name} after ${durationSeconds} seconds`);
     }
-
-    const durationSeconds:string = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.info(`Imported ${name} in ${durationSeconds} seconds`);
-    if (errors) errors.close();
-
-    renameSync('/data/NPD/' + name, '/data/finished/' + name);
   }
 
 
