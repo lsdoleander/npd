@@ -34,7 +34,7 @@ export const config: AppConfig = (function(){
         id: "INTEGER", // 0
         first: "TEXT",
         last: "TEXT",
-        middle: "TEXT",
+        middle: "TEXT", // 3
         suffix: "TEXT",
         dob: "TEXT",
         address: "TEXT", // 6
