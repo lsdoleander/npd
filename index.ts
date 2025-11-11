@@ -148,7 +148,7 @@ export const importData = async (config: AppConfig): Promise<void> => {
 
 const main = async (): Promise<void> => {
   try {
-    console.log("Build Version: Venusaur")
+    console.log("Build Version: Squirtle")
     await new Promise<void>(async resolve=>{
       setTimeout(async function(){
         await importData(config);
