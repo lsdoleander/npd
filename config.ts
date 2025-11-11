@@ -45,8 +45,8 @@ export const config: AppConfig = (function(){
         phone: "TEXT",  // 11
 /*      aka1: "TEXT",
         aka2: "TEXT",
-        aka3: "TEXT",
-        since: "TEXT",*/
+        aka3: "TEXT",*/
+        since: "TEXT",
         altdob1: "TEXT", // 16
 /*      altdob2: "TEXT",
         altdob3: "TEXT",*/

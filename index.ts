@@ -5,102 +5,108 @@ import { from } from 'pg-copy-streams';
 import { config, type AppConfig } from './config';
 import { createTableIfNotExists, createIndex } from './services';
 import { createReadStream, createWriteStream, readdirSync, renameSync, type ReadStream, WriteStream } from 'node:fs';
-import * as es from 'event-stream';
+//import { split } from 'event-stream';
+
+import { CSVCommaSpaceEscaper } from './filter';
 
 let last = '_1_1';
+
+const csvPostgres = async (client: PoolClient, config: AppConfig, name:string): Promise<void> => {
+  const tokens:Array<string> = name.match(/ssn(\d)\.(\d+)\.(\d+)*\.txt/);
+  const suffix:string = `_${tokens[1]}_${tokens[2]}`;
+  const table:string = config.table.name+suffix;
+
+  if (last !== suffix) {
+    await createIndex(client, config.table.name+last, last);
+  }
+  last = suffix;
+
+  await createTableIfNotExists(client, config, table);
+  const fileStream = createReadStream('/data/NPD/' + name, { highWaterMark: 64 * 1024  });
+  const pgStream = client.query(from(`COPY ${table} (${config.table.csvColumns.join(',')}) FROM STDIN WITH (FORMAT csv, HEADER false)`));
+  const filter = new CSVCommaSpaceEscaper(suffix);
+  try {
+    await pipeline(fileStream, filter, pgStream);
+    console.info('CSV data copy completed successfully');
+  } catch (error) {
+    console.error('Error during copy:', error);
+    throw error;
+  }
+};
 
 const copyCsvToTable = async (client: PoolClient, config: AppConfig): Promise<void> => {
 
   async function file(name:string) {
     return new Promise<void>(async resolve=>{
 
-    const tokens:Array<string> = name.match(/ssn(\d)\.(\d+)\.(\d+)*\.txt/);
-    const suffix:string = `_${tokens[1]}_${tokens[2]}`;
-    const temp:string = `temp${suffix}_${tokens[3]}`;
-    const table:string = config.table.name+suffix;
-    let errors:WriteStream;
+      const startTime:number = new Date().getTime();
 
-    if (last !== suffix) {
-      await createIndex(client, config.table.name+last, last);
-    }
-    last = suffix;
+          await csvPostgres(client, config, name);
+          renameSync('/data/NPD/' + name, '/data/finished/' + name);
 
-    console.info(`Copying CSV to temp table ${temp}`);
-    await createTableIfNotExists(client, config, temp);
+          const durationSeconds:string = ((new Date().getTime() - startTime) / 1000).toFixed(2);
+          console.info(`Imported ${name} in ${durationSeconds} seconds`);
+          resolve();
 
-    const startTime:number = new Date().getTime();
 
-    const VALUES:string = (()=>{
-      let value:string = "$1";
-      for (let i:number = 2; i <= 14; i++) {
-        value += ", $" + i;
-      }
-      return value;
-    })();
+    //  let errors:WriteStream;
+ /*     const VALUES:string = (()=>{
+        let value:string = "$1";
+        for (let i:number = 2; i <= 14; i++) {
+          value += ", $" + i;
+        }
+        return value;
+      })();
 
-    const query:string = `INSERT INTO ${temp} (${config.table.csvColumns.join(',')}) VALUES (${VALUES})`;
+      const query:string = `INSERT INTO ${temp} (${config.table.csvColumns.join(',')}) VALUES (${VALUES})`;
 
-    function columns(line:string) {
-      let parts:Array<string> = line.split(",");
-      let ssn:string = parts[parts.length - 1];
-      
-      if (/\d{9}/.test(ssn)) {
-        let altdob1:string = parts[parts.length - 3];
+      function columns(line:string) {
+        let parts:Array<string> = line.split(",");
+        let ssn:string = parts[parts.length - 1];
         
-        if (parts.length === 20 || /([A-Z]{2})?/.test(parts[9]) && /\d{5}(-\d{4})?/.test(parts[10]) && /(\d{10})?/.test(parts[11])){
-          return { 
-            name: "mass-insert",
-            text: query,
-            values: [ ...parts.slice(0,12), altdob1, ssn ]
-          }
+        if (/\d{9}/.test(ssn)) {
+          let altdob1:string = parts[parts.length - 3];
+          let since:string = parts[parts.length - 4];
           
-        } else if (/([A-Z]{2})?/.test(parts[10]) && /\d{5}(-\d{4})?/.test(parts[11]) && /(\d{10})?/.test(parts[12])){
-          return { 
-            name: "mass-insert",
-            text: query,
-            values: [ ...parts.slice(0,6), parts[6]+","+parts[7], parts.slice(8,13), altdob1, ssn ]
-          }
+          if (parts.length === 20 || /([A-Z]{2})?/.test(parts[9]) && /\d{5}(-\d{4})?/.test(parts[10]) && /(\d{10})?/.test(parts[11])){
+            return [ ...parts.slice(0,12), since, altdob1, ssn ]
+           
+          } else if (/([A-Z]{2})?/.test(parts[10]) && /\d{5}(-\d{4})?/.test(parts[11]) && /(\d{10})?/.test(parts[12])){
+            return [ ...parts.slice(0,6), parts[6]+","+parts[7], parts.slice(8,13), since, altdob1, ssn ]
 
-        } else if (line.trim() !== ""){
-          if (!errors) errors = createWriteStream(`/data/finished/errors_${suffix}.txt`, { flags: "a" });
-          errors.write(line+"\n");
+          } else if (line.trim() !== ""){
+            if (!errors) errors = createWriteStream(`/data/finished/errors_${suffix}.txt`, { flags: "a" });
+            errors.write(line+"\n");
+          }
         }
       }
-    }
-
-    let count = 0;
-    try {
-      createReadStream('/data/NPD/' + name, {
-        highWaterMark: 64 * 1024
-      }).pipe(es.split()).pipe(es.mapSync(async function(line) {
-        let insert = columns(line);
-        if (insert) {
-          count++;
-          await client.query(insert);
-          if (count % 1000000 === 0){
-            console.log("inserted", count);
+*/
+      
+      try {
+     /*   createReadStream('/data/NPD/' + name, {
+          highWaterMark: 64 * 1024
+        }).pipe(es.split()).pipe(es.mapSync(async function(line) {
+          let insert = columns(line);
+          if (insert) {
+            count++;
+            await client.query(insert);
+            if (count % 1000000 === 0){
+              console.log("inserted", count);
+            }
           }
-        }
-      })).on("end", async function(){
+        })).on("end", async function(){ */
 
-        if (errors) errors.close();
-        renameSync('/data/NPD/' + name, '/data/finished/' + name);
+         // if (errors) errors.close();
 
-        await createTableIfNotExists(client, config, table);
-        await client.query(`INSERT INTO ${table} VALUES (SELECT * FROM ${temp})`);
-        await client.query(`DROP TABLE ${temp}`);
-        const durationSeconds:string = ((new Date().getTime() - startTime) / 1000).toFixed(2);
-        console.info(`Imported ${name} in ${durationSeconds} seconds`);
-        resolve();
-        
-      }).on("error", function(ex) {
-         console.error(ex);
-         resolve();
-      });
-    } catch(ex){
-     console.error(ex);
-     resolve();
-    }
+/*          
+        }).on("error", function(ex) {
+           console.error(ex);
+           resolve();
+        });*/
+      } catch(ex){
+       console.error(ex);
+       resolve();
+      }
     })
   }
 
