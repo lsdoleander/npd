@@ -52,7 +52,8 @@ $(document).ready(function(){
           const R={
             PH: /(\d{3})(\d{3})(\d{4})/,
             DOB: /(\d{4})(\d{2})(\d{2})/,
-            SSN: /(\d{3})(\d{2})(\d{4})/
+            SSN: /(\d{3})(\d{2})(\d{4})/,
+            SINCE: /(\d{2})(\d{4})/
           }
 
           function _ph_(p) {
@@ -63,6 +64,9 @@ $(document).ready(function(){
           }
           function _ssn_(s) {
             return R.SSN.test(s) ? s.replace(R.SSN, `$1 $2 $3`):""
+          }
+          function _since_(s) {
+            return R.SINCE.test(s) ? s.replace(R.SINCE, `$1/$3`):""
           }
 
           for (let i of message.hits) {
@@ -78,6 +82,7 @@ $(document).ready(function(){
               <td>${_ph_(i.phone)}</td>
               <td>${_dob_(i.dob)}</td>
               <td>${_dob_(i.altdob1)}</td>
+              <td>${_since_(i.since)}</td>
               <td class="ssn" data="${i.ssn}">${_ssn_(i.ssn)}</td>
             </tr>`));
           }
