@@ -12,7 +12,7 @@ import { CSVCommaSpaceEscaper } from './filter';
 let last = '_1_1';
 
 const csvPostgres = async (client: PoolClient, config: AppConfig, name:string): Promise<void> => {
-  const tokens:Array<string> = name.match(/ssn(\d)\.(\d+)\.(\d+)*\.txt/);
+  const tokens:Array<string> = name.match(/ssn(\d)\.(\d+)\.(\d+)*/);
   const suffix:string = `_${tokens[1]}_${tokens[2]}`;
   const table:string = config.table.name+suffix;
 
