@@ -9,14 +9,14 @@ import { createReadStream, createWriteStream, readdirSync, renameSync, type Read
 
 import { CSVCommaSpaceEscaper } from './filter';
 
-let last = '_1_1';
+let last;
 
 const csvPostgres = async (client: PoolClient, config: AppConfig, name:string): Promise<void> => {
   const tokens:Array<string> = name.match(/ssn(\d)\.(\d+)\.(\d+)*/);
   const suffix:string = `_${tokens[1]}_${tokens[2]}`;
   const table:string = config.table.name+suffix;
 
-  if (last !== suffix) {
+  if (last && last !== suffix) {
     await createIndex(client, config.table.name+last, last);
   }
   last = suffix;
