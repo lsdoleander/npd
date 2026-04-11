@@ -24,8 +24,8 @@ export class CSVCommaSpaceEscaper extends stream.Transform {
     let ssn:string = parts[parts.length - 1];
     
     if (/\d{9}/.test(ssn)) {
-      let altdob1:string = parts[parts.length - 3];
-      let since:string = parts[parts.length - 4];
+      let altdob1:string = parts[parts.length - 4];
+      let since:string = parts[parts.length - 5];
       
       if (parts.length === 20 || /([A-Z]{2})?/.test(parts[9]) && /\d{5}(-\d{4})?/.test(parts[10]) && /(\d{10})?/.test(parts[11])){
         return [ ...parts.slice(0,12), since, altdob1, ssn ]

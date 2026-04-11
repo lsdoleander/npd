@@ -31,7 +31,7 @@ export const config: AppConfig = (function(){
     table: {
       name: 'NPD',
       columns: {
-        id: "INTEGER", // 0
+        id: "TEXT", // 0
         first: "TEXT",
         last: "TEXT",
         middle: "TEXT", // 3
