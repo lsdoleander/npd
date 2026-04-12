@@ -9,7 +9,7 @@ import { stringify } from 'csv-stringify/sync'
 
 	const sql = postgres('postgres://postgres:postgres@db:5432/npd')
 
-	const LAYOUT = { "0": 1, "1":68, "2":27 }; //40
+	const LAYOUT = { "1":67, "2":15 }; //39
 
 	let app = express();
 	app.use(cors());
@@ -30,7 +30,7 @@ import { stringify } from 'csv-stringify/sync'
 			console.log("message", message);
 
 			for (let spa in LAYOUT) {
-				for (let spb = 1; spb <= LAYOUT[spa]; spb++) {
+				for (let spb = 0; spb <= LAYOUT[spa]; spb++) {
 					function search(table, { first, last, city, state, zip, ssn }){
 						queue.push(function(cb){
 							(async()=>{
