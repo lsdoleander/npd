@@ -9,7 +9,7 @@ import { stringify } from 'csv-stringify/sync'
 
 	const sql = postgres('postgres://postgres:postgres@db:5432/npd')
 
-	const LAYOUT = { "1":67, "2":15 }; //39
+	const LAYOUT = { "1":67, "2":39 };
 
 	let app = express();
 	app.use(cors());
@@ -36,12 +36,12 @@ import { stringify } from 'csv-stringify/sync'
 							(async()=>{
 								try {
 
-									const hits = await sql`SELECT id, first, middle, last, suffix, address, city, state, zip, phone, dob, altdob1, ssn
+									const hits = await sql`SELECT id, first, middle, last, suffix, address, city, state, zip, phone, dob, since, altdob1, ssn
 									 	FROM ${ sql(table) } WHERE 1=1
-										${ first ? sql` AND first = ${ first }` : sql``}
-										${ last ? sql` AND last = ${ last }` : sql``}
-										${ city ? sql` AND city = ${ city }` : sql``}
-										${ state ? sql` AND state = ${ state }` : sql``}
+										${ first ? sql` AND first = ${ first.toUpperCase() }` : sql``}
+										${ last ? sql` AND last = ${ last.toUpperCase() }` : sql``}
+										${ city ? sql` AND city = ${ city.toUpperCase() }` : sql``}
+										${ state ? sql` AND state = ${ state.toUpperCase() }` : sql``}
 										${ zip ? sql` AND zip = ${ zip }` : sql``}
 										${ ssn ? sql` AND ssn = ${ ssn }` : sql``}`
 									
