@@ -66,7 +66,7 @@ $(document).ready(function(){
             return R.SSN.test(s) ? s.replace(R.SSN, `$1 $2 $3`):""
           }
           function _since_(s) {
-            return R.SINCE.test(s) ? s.replace(R.SINCE, `$1/$3`):""
+            return s //R.SINCE.test(s) ? s.replace(R.SINCE, `$1/$3`):""
           }
 
           for (let i of message.hits) {
