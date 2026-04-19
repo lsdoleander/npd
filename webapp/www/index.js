@@ -53,7 +53,7 @@ $(document).ready(function(){
             PH: /(\d{3})(\d{3})(\d{4})/,
             DOB: /(\d{4})(\d{2})(\d{2})/,
             SSN: /(\d{3})(\d{2})(\d{4})/,
-            SINCE: /(\d{2})(\d{4})/
+            SINCE: /(\d{4})(\d{2})/
           }
 
           function _ph_(p) {
@@ -66,7 +66,7 @@ $(document).ready(function(){
             return R.SSN.test(s) ? s.replace(R.SSN, `$1 $2 $3`):""
           }
           function _since_(s) {
-            return s //R.SINCE.test(s) ? s.replace(R.SINCE, `$1/$3`):""
+            return R.SINCE.test(s) ? s.replace(R.SINCE, `$2/$1`):""
           }
 
           for (let i of message.hits) {
